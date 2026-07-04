@@ -1,0 +1,9 @@
+CREATE DATABASE IF NOT EXISTS videojuegos_db;
+USE videojuegos_db;
+
+CREATE TABLE IF NOT EXISTS videojuegos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  titulo VARCHAR(255) NOT NULL,
+  plataforma VARCHAR(100) NOT NULL,
+  estado VARCHAR(50) NOT NULL
+);
