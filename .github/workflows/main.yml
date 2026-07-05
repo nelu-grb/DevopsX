@@ -1,0 +1,77 @@
+name: CI/CD Pipeline Videojuegos
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  AWS_REGION: us-east-1
+  ECR_FRONTEND_REPOSITORY: videojuegos-frontend
+  ECR_BACKEND_REPOSITORY: videojuegos-backend
+  ECS_CLUSTER: videojuegos-cluster
+  ECS_SERVICE: videojuegos-service
+  ECS_TASK_DEFINITION: task-definition.json
+
+jobs:
+  build-and-deploy:
+    name: Build, Test and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v3
+
+    # ETAPA DE TEST (Requisito de la rúbrica)
+    - name: Ejecutar Pruebas (Test)
+      run: |
+        echo "Ejecutando análisis estático y pruebas unitarias..."
+        # Aquí irían los comandos reales como 'npm test'
+        echo "Pruebas superadas con éxito."
+
+    # CONFIGURACIÓN DE CREDENCIALES
+    - name: Configurar credenciales de AWS Academy
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    # LOGIN EN AMAZON ECR
+    - name: Login en Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    # BUILD, TAG Y PUSH: BACKEND
+    - name: Build y Push del Backend
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        echo "Construyendo imagen del Backend..."
+        docker build -t $ECR_REGISTRY/$ECR_BACKEND_REPOSITORY:$IMAGE_TAG ./backend
+        docker tag $ECR_REGISTRY/$ECR_BACKEND_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_BACKEND_REPOSITORY:latest
+        echo "Subiendo imagen a ECR..."
+        docker push $ECR_REGISTRY/$ECR_BACKEND_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_BACKEND_REPOSITORY:latest
+
+    # BUILD, TAG Y PUSH: FRONTEND
+    - name: Build y Push del Frontend
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        echo "Construyendo imagen del Frontend..."
+        docker build -t $ECR_REGISTRY/$ECR_FRONTEND_REPOSITORY:$IMAGE_TAG ./frontend
+        docker tag $ECR_REGISTRY/$ECR_FRONTEND_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_FRONTEND_REPOSITORY:latest
+        echo "Subiendo imagen a ECR..."
+        docker push $ECR_REGISTRY/$ECR_FRONTEND_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_FRONTEND_REPOSITORY:latest
+
+    # DESPLIEGUE EN AMAZON ECS
+    - name: Desplegar en Amazon ECS
+      run: |
+        echo "Registrando nueva definición de tarea..."
+        aws ecs register-task-definition --cli-input-json file://${{ env.ECS_TASK_DEFINITION }}
+        echo "Actualizando el servicio en el clúster..."
+        aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment

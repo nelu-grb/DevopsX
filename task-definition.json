@@ -1,0 +1,59 @@
+{
+  "family": "videojuegos-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::<TU_ID_DE_CUENTA_AWS>:role/LabRole",
+  "taskRoleArn": "arn:aws:iam::<TU_ID_DE_CUENTA_AWS>:role/LabRole",
+  "containerDefinitions": [
+    {
+      "name": "backend",
+      "image": "<TU_ID_DE_CUENTA_AWS>.dkr.ecr.us-east-1.amazonaws.com/videojuegos-backend:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "hostPort": 3000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        { "name": "DB_HOST", "value": "<ENDPOINT_DE_TU_BASE_DE_DATOS>" },
+        { "name": "DB_USER", "value": "admin" },
+        { "name": "DB_PASSWORD", "value": "<TU_CONTRASEÑA>" },
+        { "name": "DB_NAME", "value": "videojuegos_db" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/videojuegos-backend",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    },
+    {
+      "name": "frontend",
+      "image": "<TU_ID_DE_CUENTA_AWS>.dkr.ecr.us-east-1.amazonaws.com/videojuegos-frontend:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/videojuegos-frontend",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

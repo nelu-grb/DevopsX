@@ -4,11 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Gestor Biblioteca de Videojuegos</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <div class="container">
-      <h1>Gestor Biblioteca de Videojuegos</h1>
+      <div class="hero">
+        <h1>Gestor Biblioteca de Videojuegos</h1>
+        <p>Registra y consulta los títulos que quieres jugar o seguir.</p>
+      </div>
 
       <form id="form-juego" class="card">
         <div class="row">
@@ -44,7 +47,10 @@
       </form>
 
       <section class="card">
-        <h2>Biblioteca</h2>
+        <div class="section-title">
+          <h2>Biblioteca</h2>
+        </div>
+        <p id="feedback" class="feedback" role="status" aria-live="polite">Cargando juegos...</p>
         <table id="tabla-juegos">
           <thead>
             <tr><th>ID</th><th>Título</th><th>Plataforma</th><th>Estado</th></tr>

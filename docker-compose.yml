@@ -1,40 +1,39 @@
+# docker-compose.yml
 version: '3.8'
+
 services:
-  mysql:
+  db:
     image: mysql:8.0
-    restart: unless-stopped
+    container_name: videojuegos-db
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-changeit}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-videojuegos_db}
-    volumes:
-      - db_data:/var/lib/mysql
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      MYSQL_DATABASE: videojuegos_db
+      MYSQL_ROOT_PASSWORD: rootpassword
     ports:
       - "3306:3306"
+    volumes:
+      # Esto ejecuta tu script init.sql al crear la BD por primera vez
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   backend:
-    build:
-      context: ./backend
-    restart: unless-stopped
+    build: ./backend
+    container_name: videojuegos-backend
+    restart: always
     environment:
-      DB_HOST: mysql
-      DB_USER: root
-      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-changeit}
-      DB_NAME: ${MYSQL_DATABASE:-videojuegos_db}
-      PORT: 3000
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=rootpassword
+      - DB_NAME=videojuegos_db
     ports:
       - "3000:3000"
     depends_on:
-      - mysql
+      - db
 
   frontend:
-    build:
-      context: ./frontend
-    restart: unless-stopped
+    build: ./frontend
+    container_name: videojuegos-frontend
+    restart: always
     ports:
       - "8080:80"
     depends_on:
       - backend
-
-volumes:
-  db_data:
