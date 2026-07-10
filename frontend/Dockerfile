@@ -1,12 +1,17 @@
-# frontend/Dockerfile
-FROM nginx:alpine
+FROM node:18-alpine AS builder
+WORKDIR /app
 
-# Copiar los archivos estáticos al directorio por defecto de Nginx
-COPY index.html /usr/share/nginx/html/
-COPY style.css /usr/share/nginx/html/
-COPY app.js /usr/share/nginx/html/
+# Copy frontend sources (no build step for plain HTML/JS)
+COPY . .
 
-# Exponer el puerto 80
+FROM nginx:stable-alpine
+
+# Copy static files into nginx html dir
+COPY --from=builder /app /usr/share/nginx/html
+
+# Replace default nginx config with our hardened config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
 
-# Nginx se inicia automáticamente, no requiere CMD explícito
+CMD ["nginx", "-g", "daemon off;"]

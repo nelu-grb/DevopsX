@@ -6,6 +6,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// healthcheck endpoint (available without DB)
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
 const DB_HOST = process.env.DB_HOST || 'mysql';
 const DB_USER = process.env.DB_USER || 'root';
 const DB_PASSWORD = process.env.DB_PASSWORD || process.env.MYSQL_ROOT_PASSWORD || 'changeit';
@@ -58,11 +62,17 @@ app.post('/api/juegos', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-initDb()
-  .then(() => {
-    app.listen(PORT, () => console.log(`Backend escuchando en puerto ${PORT}`));
-  })
-  .catch(err => {
-    console.error('No se pudo inicializar la base de datos:', err);
-    process.exit(1);
-  });
+// export app for tests
+module.exports = app;
+
+// start server only when run directly
+if (require.main === module) {
+  initDb()
+    .then(() => {
+      app.listen(PORT, () => console.log(`Backend escuchando en puerto ${PORT}`));
+    })
+    .catch(err => {
+      console.error('No se pudo inicializar la base de datos:', err);
+      process.exit(1);
+    });
+}

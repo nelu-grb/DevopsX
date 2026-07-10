@@ -6,12 +6,12 @@
   ],
   "cpu": "512",
   "memory": "1024",
-  "executionRoleArn": "arn:aws:iam::<TU_ID_DE_CUENTA_AWS>:role/LabRole",
-  "taskRoleArn": "arn:aws:iam::<TU_ID_DE_CUENTA_AWS>:role/LabRole",
+  "executionRoleArn": "arn:aws:iam::AWS_ACCOUNT_ID:role/LabRole",
+  "taskRoleArn": "arn:aws:iam::AWS_ACCOUNT_ID:role/LabRole",
   "containerDefinitions": [
     {
       "name": "backend",
-      "image": "<TU_ID_DE_CUENTA_AWS>.dkr.ecr.us-east-1.amazonaws.com/videojuegos-backend:latest",
+      "image": "AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/videojuegos-backend:latest",
       "essential": true,
       "portMappings": [
         {
@@ -23,7 +23,6 @@
       "environment": [
         { "name": "DB_HOST", "value": "<ENDPOINT_DE_TU_BASE_DE_DATOS>" },
         { "name": "DB_USER", "value": "admin" },
-        { "name": "DB_PASSWORD", "value": "<TU_CONTRASEÑA>" },
         { "name": "DB_NAME", "value": "videojuegos_db" }
       ],
       "logConfiguration": {
@@ -37,7 +36,7 @@
     },
     {
       "name": "frontend",
-      "image": "<TU_ID_DE_CUENTA_AWS>.dkr.ecr.us-east-1.amazonaws.com/videojuegos-frontend:latest",
+      "image": "AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/videojuegos-frontend:latest",
       "essential": true,
       "portMappings": [
         {
