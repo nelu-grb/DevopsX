@@ -94,3 +94,5 @@ El sistema incorpora buenas prácticas de seguridad y observabilidad para entorn
 ## 9. Conclusión
 
 Este proyecto representa una implementación práctica de una aplicación full-stack con enfoque DevOps, integrando desarrollo, contenedorización, automatización y despliegue en la nube en un contexto académico y profesional.
+
+aaa
