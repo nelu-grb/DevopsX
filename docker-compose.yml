@@ -57,3 +57,7 @@ volumes:
 networks:
   appnet:
     driver: bridge
+
+
+
+    
