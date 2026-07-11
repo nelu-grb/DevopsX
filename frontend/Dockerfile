@@ -1,15 +1,17 @@
-FROM node:18-alpine AS builder
-WORKDIR /app
-
-# Copy frontend sources (no build step for plain HTML/JS)
-COPY . .
-
+# ==========================================
+# Producción: Servidor Web Nginx Minimalista
+# ==========================================
 FROM nginx:stable-alpine
 
-# Copy static files into nginx html dir
-COPY --from=builder /app /usr/share/nginx/html
+WORKDIR /usr/share/nginx/html
 
-# Replace default nginx config with our hardened config
+# OPTIMIZACIÓN: Copiamos directamente los archivos estáticos necesarios
+# Evitamos copiar configuraciones de Docker o CI/CD al directorio web público
+COPY app.js ./
+COPY index.html ./
+COPY style.css ./
+
+# Inyectamos tu configuración de Nginx endurecida
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80

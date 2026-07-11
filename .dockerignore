@@ -4,4 +4,7 @@ frontend/node_modules
 .git
 .idea
 .vscode
-Dockerfile
+.env
+.env.example
+npm-debug.log
+README.md

@@ -3,63 +3,83 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Gestiona tu colección de videojuegos con una biblioteca simple, atractiva y responsiva.">
     <title>Gestor Biblioteca de Videojuegos</title>
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <div class="container">
-      <div class="hero">
-        <h1>Gestor Biblioteca de Videojuegos</h1>
-        <p>Registra y consulta los títulos que quieres jugar o seguir.</p>
-      </div>
-
-      <form id="form-juego" class="card">
-        <div class="row">
-          <label for="titulo">Título</label>
-          <input id="titulo" name="titulo" required />
+    <main class="container">
+      <header class="hero">
+        <div>
+          <span class="eyebrow">Biblioteca de Videojuegos</span>
+          <h1>Gestor de tu colección</h1>
+          <p>Registra y consulta los títulos que quieres jugar, seguir o completar.</p>
         </div>
+        <div class="hero-badge">Ágil, clara y lista para usarse</div>
+      </header>
 
-        <div class="row">
-          <label for="plataforma">Plataforma</label>
-          <select id="plataforma" name="plataforma" required>
-            <option value="Steam">Steam</option>
-            <option value="Riot Games">Riot Games</option>
-            <option value="Epic Games">Epic Games</option>
-            <option value="Ubisoft">Ubisoft</option>
-            <option value="Roblox">Roblox</option>
-            <option value="Supercell">Supercell</option>
-            <option value="Activision">Activision</option>
-          </select>
-        </div>
+      <section class="grid">
+        <form id="form-juego" class="card">
+          <h2 id="form-title">Agregar juego</h2>
+          <input type="hidden" id="juego-id" name="id" />
 
-        <div class="row">
-          <label for="estado">Estado</label>
-          <select id="estado" name="estado" required>
-            <option value="Pendiente">Pendiente</option>
-            <option value="Jugando">Jugando</option>
-            <option value="Completado">Completado</option>
-          </select>
-        </div>
+          <div class="row">
+            <label for="titulo">Título</label>
+            <input id="titulo" name="titulo" placeholder="Ej. Elden Ring" autocomplete="off" required />
+          </div>
 
-        <div class="row actions">
-          <button type="submit">Agregar juego</button>
-        </div>
-      </form>
+          <div class="row">
+            <label for="plataforma">Plataforma</label>
+            <select id="plataforma" name="plataforma" required>
+              <option value="Steam">Steam</option>
+              <option value="Riot Games">Riot Games</option>
+              <option value="Epic Games">Epic Games</option>
+              <option value="Ubisoft">Ubisoft</option>
+              <option value="Roblox">Roblox</option>
+              <option value="Supercell">Supercell</option>
+              <option value="Activision">Activision</option>
+            </select>
+          </div>
 
-      <section class="card">
-        <div class="section-title">
-          <h2>Biblioteca</h2>
-        </div>
-        <p id="feedback" class="feedback" role="status" aria-live="polite">Cargando juegos...</p>
-        <table id="tabla-juegos">
-          <thead>
-            <tr><th>ID</th><th>Título</th><th>Plataforma</th><th>Estado</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+          <div class="row">
+            <label for="estado">Estado</label>
+            <select id="estado" name="estado" required>
+              <option value="Pendiente">Pendiente</option>
+              <option value="Jugando">Jugando</option>
+              <option value="Completado">Completado</option>
+            </select>
+          </div>
+
+          <div class="row actions">
+            <button type="submit" id="submit-button">Agregar juego</button>
+            <button type="button" id="cancel-edit" class="secondary hidden">Cancelar</button>
+          </div>
+        </form>
+
+        <section class="card library">
+          <div class="section-header">
+            <div>
+              <h2>Biblioteca</h2>
+              <p class="section-note">Filtra por título o estado y trabaja con tarjetas más claras.</p>
+            </div>
+            <div class="filters">
+              <input id="filtro-titulo" type="search" placeholder="Buscar por título..." aria-label="Buscar por título" />
+              <select id="filtro-estado" aria-label="Filtrar por estado">
+                <option value="Todos">Todos los estados</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Jugando">Jugando</option>
+                <option value="Completado">Completado</option>
+              </select>
+            </div>
+          </div>
+
+          <p id="feedback" class="feedback" role="status" aria-live="polite">Cargando juegos...</p>
+
+          <div class="library-grid" id="library-grid"></div>
+        </section>
       </section>
-    </div>
+    </main>
 
-    <script src="/app.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>

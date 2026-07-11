@@ -60,6 +60,55 @@ app.post('/api/juegos', async (req, res) => {
   }
 });
 
+app.put('/api/juegos/:id', async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const { titulo, plataforma, estado } = req.body;
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({ error: 'ID inválido' });
+    }
+
+    if (!titulo || !plataforma || !estado) {
+      return res.status(400).json({ error: 'Faltan campos requeridos' });
+    }
+
+    const [result] = await pool.execute(
+      'UPDATE videojuegos SET titulo = ?, plataforma = ?, estado = ? WHERE id = ?',
+      [titulo, plataforma, estado, id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Juego no encontrado' });
+    }
+
+    res.json({ id, titulo, plataforma, estado });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al actualizar juego' });
+  }
+});
+
+app.delete('/api/juegos/:id', async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(400).json({ error: 'ID inválido' });
+    }
+
+    const [result] = await pool.execute('DELETE FROM videojuegos WHERE id = ?', [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Juego no encontrado' });
+    }
+
+    res.status(204).end();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al eliminar juego' });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 
 // export app for tests
