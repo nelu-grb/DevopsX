@@ -1,0 +1,19 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "videojuegos-db.cq0xoyhzqq9a.us-east-1.rds.amazonaws.com",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "AWS RDS Videojuegos",
+            "database": "videojuegos_db",
+            "username": "admin",
+            "askForPassword": true
+        }
+    ]
+}
